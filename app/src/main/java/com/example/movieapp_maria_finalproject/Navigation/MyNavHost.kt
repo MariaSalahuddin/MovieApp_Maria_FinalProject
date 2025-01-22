@@ -24,11 +24,11 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
         composable("movieDetail/{movieId}") { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
             val movie = viewModel.movies.results.find { it.id == movieId }
-            movie?.let { MovieDetailScreen(movie = it) }
+            movie?.let { MovieDetailScreen(movie = it, navController = navController) }
         }
         composable("favorites") {
             FavoriteMoviesScreen(
-                favoriteMovies = viewModel.movies,
+                favoriteMovies = viewModel.favoriteMovies,
                 onRemoveFromFavorites = { movie -> viewModel.removeFromFavorites(movie) }
             )
         }

@@ -8,11 +8,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp_maria_finalproject.Model.Movie
 import com.example.movieapp_maria_finalproject.Networking.MovieResponse
+import com.example.movieapp_maria_finalproject.Room.MovieDao
+import com.example.movieapp_maria_finalproject.Room.MovieDatabase
+import com.example.movieapp_maria_finalproject.Room.MovieEntity
 import kotlinx.coroutines.launch
 
 class MovieViewModel() : ViewModel() {
     var movies by mutableStateOf(MovieResponse(emptyList()))
- //   var favoriteMovies by mutableStateOf(MovieResponse(emptyList()))
+    var favoriteMovies by mutableStateOf(MovieResponse(emptyList()))
+   // private val movieDao: MovieDao = MovieDatabase.getDatabase(application).movieDao()
     var appRepo = AppRepository()
 
     fun getPopularMovies(){
@@ -28,20 +32,10 @@ class MovieViewModel() : ViewModel() {
         }
     }
     init {
-        fetchPopularMovies()
         fetchFavoriteMovies()
     }
 
-    private fun fetchPopularMovies() {
-//        viewModelScope.launch {
-//            try {
-//                val response = movieRepository.getPopularMovies(1)
-//                movies.addAll(response.results)
-//            } catch (e: Exception) {
-//                // Handle the error
-//            }
-//        }
-    }
+
 
     private fun fetchFavoriteMovies() {
 //        viewModelScope.launch {
@@ -51,9 +45,19 @@ class MovieViewModel() : ViewModel() {
     }
 
     fun addToFavorites(movie: Movie) {
+//        val movieEntity = MovieEntity(
+//            id = movie.id,
+//            title = movie.title,
+//            overview = movie.overview,
+//            poster_path = movie.poster_path,
+//         original_language = movie.original_language,
+//         release_date = movie.release_date,
+//         vote_average = movie.vote_average,
+//         vote_count = movie.vote_count
+//        )
 //        viewModelScope.launch {
-//            movieRepository.addFavorite(movie)
-//            favoriteMovies.add(movie)
+//         //   movieDao.insertMovie(movieEntity)
+//
 //        }
     }
 
@@ -64,7 +68,4 @@ class MovieViewModel() : ViewModel() {
 //        }
     }
 
-    fun searchMovies(query: String) {
-    //    movies = mutableStateListOf(movies.filter { it.title.contains(query, ignoreCase = true) })
-    }
 }
