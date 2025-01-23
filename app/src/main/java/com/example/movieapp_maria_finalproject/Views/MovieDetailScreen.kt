@@ -37,10 +37,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieapp_maria_finalproject.Model.Movie
+import com.example.movieapp_maria_finalproject.Room.MovieEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen(movie: Movie, navController: NavController) {
+fun MovieDetailScreen(movie: MovieEntity, navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(

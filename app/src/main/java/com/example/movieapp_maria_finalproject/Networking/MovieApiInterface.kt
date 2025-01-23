@@ -2,6 +2,7 @@ package com.example.movieapp_maria_finalproject.Networking
 
 
 import com.example.movieapp_maria_finalproject.Model.Movie
+import com.example.movieapp_maria_finalproject.Room.MovieEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,4 +15,4 @@ interface MovieApiInterface {
     suspend fun getSearchedMovie(@Query("query") query: String): MovieResponse
 }
 
-data class MovieResponse(val results: List<Movie>)
+data class MovieResponse(val results: List<MovieEntity>)

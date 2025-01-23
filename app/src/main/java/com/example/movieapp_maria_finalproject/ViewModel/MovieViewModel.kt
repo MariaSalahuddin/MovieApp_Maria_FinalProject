@@ -8,16 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movieapp_maria_finalproject.Model.Movie
 import com.example.movieapp_maria_finalproject.Networking.MovieResponse
-import com.example.movieapp_maria_finalproject.Room.MovieDao
-import com.example.movieapp_maria_finalproject.Room.MovieDatabase
 import com.example.movieapp_maria_finalproject.Room.MovieEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class MovieViewModel() : ViewModel() {
+class MovieViewModel( var appRepo: AppRepository) : ViewModel() {
     var movies by mutableStateOf(MovieResponse(emptyList()))
-    var favoriteMovies by mutableStateOf(MovieResponse(emptyList()))
-   // private val movieDao: MovieDao = MovieDatabase.getDatabase(application).movieDao()
-    var appRepo = AppRepository()
 
     fun getPopularMovies(){
         viewModelScope.launch {
@@ -31,41 +27,25 @@ class MovieViewModel() : ViewModel() {
             movies = searchedMovies
         }
     }
-    init {
-        fetchFavoriteMovies()
+     fun getFavoriteMovies(): Flow<List<MovieEntity>> {
+        return appRepo.getFavoriteMovies()
+
     }
 
-
-
-    private fun fetchFavoriteMovies() {
-//        viewModelScope.launch {
-//            favoriteMovies.clear()
-//            favoriteMovies.addAll(movieRepository.getFavoriteMovies())
-//        }
+      fun addToFavorites(movie: MovieEntity) {
+        viewModelScope.launch {
+            appRepo.addToFav(movie)
+        }
     }
 
-    fun addToFavorites(movie: Movie) {
-//        val movieEntity = MovieEntity(
-//            id = movie.id,
-//            title = movie.title,
-//            overview = movie.overview,
-//            poster_path = movie.poster_path,
-//         original_language = movie.original_language,
-//         release_date = movie.release_date,
-//         vote_average = movie.vote_average,
-//         vote_count = movie.vote_count
-//        )
-//        viewModelScope.launch {
-//         //   movieDao.insertMovie(movieEntity)
-//
-//        }
+    fun removeFromFavorites(movie: MovieEntity) {
+        viewModelScope.launch {
+            appRepo.removeFromFavorite(movie)
+        }
     }
+    fun getSearchFavMovies(text: String): Flow<List<MovieEntity>> {
+        return appRepo.searchFromFav(text)
 
-    fun removeFromFavorites(movie: Movie) {
-//        viewModelScope.launch {
-//            movieRepository.removeFavorite(movie)
-//            favoriteMovies.remove(movie)
-//        }
     }
 
 }
