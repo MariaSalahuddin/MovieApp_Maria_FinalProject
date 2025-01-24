@@ -21,4 +21,7 @@ interface MovieDao {
 
     @Query("select * from favorite_movies WHERE title LIKE '%' || :query || '%' COLLATE NOCASE")
     fun searchFavoriteMovies(query: String): Flow<List<MovieEntity>>
+
+    @Query("SELECT EXISTS (SELECT 1 FROM favorite_movies WHERE id = :movieId)")
+     fun isMovieInFavorites(movieId: Int): Flow<Boolean>
 }

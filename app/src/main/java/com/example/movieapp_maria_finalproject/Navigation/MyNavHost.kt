@@ -40,6 +40,7 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
                 MovieDetailScreen(
                     movie = it,
                     navController = navController,
+                    viewModel = viewModel,
                     onAddToFavorites = { movie ->
                         viewModel.addToFavorites(movie)
                         Toast.makeText(

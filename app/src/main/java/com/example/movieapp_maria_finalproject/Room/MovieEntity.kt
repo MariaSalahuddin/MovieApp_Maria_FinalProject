@@ -12,5 +12,5 @@ data class MovieEntity(
     val release_date: String,
     val vote_average: Double,
     val vote_count: Double,
-    var isFav: Boolean = false
+    var isFav: Boolean
 )

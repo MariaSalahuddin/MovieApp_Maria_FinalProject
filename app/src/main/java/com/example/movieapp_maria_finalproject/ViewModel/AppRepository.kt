@@ -32,6 +32,9 @@ class AppRepository(private val movieDao: MovieDao): MovieAPIServiceInterface {
     suspend  fun addToFav(movie: MovieEntity){
         movieDao.addToFavorites(movie)
     }
+    fun isMovieInFavorites(movieId: Int): Flow<Boolean> {
+        return movieDao.isMovieInFavorites(movieId)
+    }
 
 
 }

@@ -55,4 +55,7 @@ class MovieViewModel(var appRepo: AppRepository) : ViewModel() {
             }
         }
     }
+    fun isMovieInFavorites(movieId: Int): Flow<Boolean> {
+        return appRepo.isMovieInFavorites(movieId)
+    }
 }

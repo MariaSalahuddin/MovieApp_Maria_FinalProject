@@ -34,6 +34,7 @@ fun FavoriteMoviesScreen(
     favoriteMovies: List<MovieEntity>,
     onRemoveFromFavorites: (MovieEntity) -> Unit
 ) {
+
     var finalList  by remember { mutableStateOf(emptyList<MovieEntity>()) }
     var isSearching by remember { mutableStateOf(false) }
     val searchResults by viewModel.searchResults.collectAsState(initial = emptyList())
@@ -113,7 +114,7 @@ fun FavoriteMoviesScreen(
                         items(finalList.size) { index ->
                             FavoriteMovieItem(
                                 movie = finalList[index],
-                                onRemoveFromFavorites = onRemoveFromFavorites
+                                viewModel = viewModel
                             ) {
                                 navController.navigate("movieDetail/${finalList[index].id}")
                             }
@@ -127,9 +128,10 @@ fun FavoriteMoviesScreen(
 @Composable
 fun FavoriteMovieItem(
     movie: MovieEntity,
-    onRemoveFromFavorites: (MovieEntity) -> Unit,
+    viewModel: MovieViewModel,
     onClick: () -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -160,13 +162,15 @@ fun FavoriteMovieItem(
                 modifier = Modifier
                     .weight(1f)
             ) {
+                // Title with Wrapping
                 Text(
                     text = movie.title,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     ),
-                    maxLines = 1
+                    maxLines = 2, // Allow up to 2 lines
+                    softWrap = true
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -179,7 +183,7 @@ fun FavoriteMovieItem(
 
             // Remove Button
             Button(
-                onClick = { onRemoveFromFavorites(movie) },
+                onClick = { showDialog = true },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.error
                 )
@@ -187,6 +191,18 @@ fun FavoriteMovieItem(
                 Text(
                     text = "Remove",
                     color = Color.White
+                )
+            }
+            if (showDialog) {
+                DeleteAlertDialog(
+                    titleText = "Are You Sure You Want to Delete ${movie.title}?",
+                    onYes = {
+                        viewModel.removeFromFavorites(movie)
+                        showDialog = false
+                    },
+                    onNo = {
+                        showDialog = false
+                    }
                 )
             }
         }
