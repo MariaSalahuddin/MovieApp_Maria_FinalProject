@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,48 +24,68 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.movieapp_maria_finalproject.Room.MovieEntity
+import com.example.movieapp_maria_finalproject.ViewModel.MovieViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteMoviesScreen(
     navController: NavHostController,
+    viewModel: MovieViewModel,
     favoriteMovies: List<MovieEntity>,
-    onRemoveFromFavorites: (MovieEntity) -> Unit,
-    onSearchQueryChanged: (String) -> Unit
+    onRemoveFromFavorites: (MovieEntity) -> Unit
 ) {
+    var finalList  by remember { mutableStateOf(emptyList<MovieEntity>()) }
+    var isSearching by remember { mutableStateOf(false) }
+    val searchResults by viewModel.searchResults.collectAsState(initial = emptyList())
     var searchQuery by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Scaffold for Top App Bar and Content
-        Scaffold(
-            topBar = {
-                // Top App Bar with Back Button and Favorites Title
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = "Favorites",
-                            style = MaterialTheme.typography.headlineSmall
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Favorites",
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
                     }
+                }
+            )
+        },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                // Search Bar
+                TextField(
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                        isSearching = true
+                         viewModel.getSearchFavMovies(searchQuery.trim())
+                    },
+                    label = { Text("Search In Favorites") },
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    singleLine = true
                 )
-            },
-            content = { paddingValues ->
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 if (favoriteMovies.isEmpty()) {
                     // Display a message when the list is empty
                     Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
+                            .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -80,37 +101,28 @@ fun FavoriteMoviesScreen(
                     // Show the list when it's not empty
                     LazyColumn(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
+                            .fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(favoriteMovies.size) { index ->
+                        if(isSearching){
+                            finalList = searchResults
+                        }
+                        else{
+                            finalList = favoriteMovies
+                        }
+                        items(finalList.size) { index ->
                             FavoriteMovieItem(
-                                movie = favoriteMovies[index],
+                                movie = finalList[index],
                                 onRemoveFromFavorites = onRemoveFromFavorites
                             ) {
-                                navController.navigate("movieDetail/${favoriteMovies[index].id}")
+                                navController.navigate("movieDetail/${finalList[index].id}")
                             }
                         }
                     }
                 }
             }
-        )
-
-        // Search Bar below the Scaffold
-        TextField(
-            value = searchQuery,
-            onValueChange = {
-                searchQuery = it
-                onSearchQueryChanged(searchQuery)
-            },
-            label = { Text("Search") },
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            singleLine = true
-        )
-    }
+        }
+    )
 }
 @Composable
 fun FavoriteMovieItem(

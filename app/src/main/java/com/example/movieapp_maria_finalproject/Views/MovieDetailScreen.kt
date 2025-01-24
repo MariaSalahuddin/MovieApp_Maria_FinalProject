@@ -41,7 +41,7 @@ import com.example.movieapp_maria_finalproject.Room.MovieEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen(movie: MovieEntity, navController: NavController) {
+fun MovieDetailScreen(movie: MovieEntity, navController: NavController,  onAddToFavorites: (MovieEntity) -> Unit,) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -142,9 +142,8 @@ fun MovieDetailScreen(movie: MovieEntity, navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Favorite Button
                 Button(
-                    onClick = { /* Add to favorites logic */ },
+                    onClick = { onAddToFavorites(movie) },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Add to Favorites")

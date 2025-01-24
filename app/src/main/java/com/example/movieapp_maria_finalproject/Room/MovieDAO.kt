@@ -16,10 +16,9 @@ interface MovieDao {
     @Query("select * from favorite_movies")
      fun getFavoriteMovies(): Flow<List<MovieEntity>>
 
-   // @Query("DELETE FROM favorite_movies WHERE id = :movieId")
     @Delete
     suspend fun deleteFromFavorites(movie: MovieEntity)
 
-    @Query("SELECT * FROM favorite_movies WHERE title LIKE '%' || :query || '%' ORDER BY title")
+    @Query("select * from favorite_movies WHERE title LIKE '%' || :query || '%' COLLATE NOCASE")
     fun searchFavoriteMovies(query: String): Flow<List<MovieEntity>>
 }

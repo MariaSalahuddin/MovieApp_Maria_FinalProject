@@ -69,8 +69,11 @@ fun HomeScreen(
                 value = searchQuery,
                 onValueChange = {
                     searchQuery = it
-                    if (searchQuery.length > 2) {
+                    if (searchQuery.isNotEmpty()) {
                         onSearch(searchQuery)
+                    }
+                    else{
+                        onScreenLoading()
                     }
                 },
                 label = { Text("Search Movies...") },
@@ -90,7 +93,7 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     contentDescription = "Favorites",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }
