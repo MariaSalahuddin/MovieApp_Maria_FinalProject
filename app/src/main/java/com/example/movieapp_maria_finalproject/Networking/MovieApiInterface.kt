@@ -1,7 +1,4 @@
 package com.example.movieapp_maria_finalproject.Networking
-
-
-import com.example.movieapp_maria_finalproject.Model.Movie
 import com.example.movieapp_maria_finalproject.Room.MovieEntity
 import retrofit2.http.GET
 import retrofit2.http.Query

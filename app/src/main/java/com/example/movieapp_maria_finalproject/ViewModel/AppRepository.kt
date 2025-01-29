@@ -1,6 +1,5 @@
 package com.example.movieapp_maria_finalproject.ViewModel
 
-import com.example.movieapp_maria_finalproject.Model.Movie
 import com.example.movieapp_maria_finalproject.Model.MovieAPIService
 import com.example.movieapp_maria_finalproject.Model.MovieAPIServiceInterface
 import com.example.movieapp_maria_finalproject.Networking.MovieResponse

@@ -31,8 +31,7 @@ import com.example.movieapp_maria_finalproject.ViewModel.MovieViewModel
 fun FavoriteMoviesScreen(
     navController: NavHostController,
     viewModel: MovieViewModel,
-    favoriteMovies: List<MovieEntity>,
-    onRemoveFromFavorites: (MovieEntity) -> Unit
+    favoriteMovies: List<MovieEntity>
 ) {
 
     var finalList  by remember { mutableStateOf(emptyList<MovieEntity>()) }

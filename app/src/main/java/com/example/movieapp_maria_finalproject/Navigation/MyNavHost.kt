@@ -58,8 +58,7 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
                 navController = navController,
                 viewModel = viewModel,
                 favoriteMovies = viewModel.getFavoriteMovies()
-                    .collectAsState(initial = emptyList()).value,
-                onRemoveFromFavorites = { movie -> viewModel.removeFromFavorites(movie) },
+                    .collectAsState(initial = emptyList()).value
             )
         }
     }

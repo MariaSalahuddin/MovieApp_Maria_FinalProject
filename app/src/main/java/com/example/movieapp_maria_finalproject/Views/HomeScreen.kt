@@ -166,6 +166,7 @@ fun MovieItem(
                     Icon(
                         imageVector = Icons.Default.FavoriteBorder,
                         contentDescription = "Add to Favorites",
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
 
