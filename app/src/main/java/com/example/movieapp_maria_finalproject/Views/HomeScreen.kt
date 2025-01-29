@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +37,12 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.movieapp_maria_finalproject.Networking.MovieResponse
 import com.example.movieapp_maria_finalproject.Room.MovieEntity
+import com.example.movieapp_maria_finalproject.ViewModel.MovieViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    viewModel: MovieViewModel,
     navController: NavHostController,
     movies: MovieResponse,
     onAddToFavorites: (MovieEntity) -> Unit,
@@ -70,8 +74,7 @@ fun HomeScreen(
                     searchQuery = it
                     if (searchQuery.isNotEmpty()) {
                         onSearch(searchQuery)
-                    }
-                    else{
+                    } else {
                         onScreenLoading()
                     }
                 },
@@ -100,7 +103,7 @@ fun HomeScreen(
         // Movies List Section
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(movies.results.size) { index ->
-                MovieItem(movies.results[index], onAddToFavorites) {
+                MovieItem(viewModel, movies.results[index], onAddToFavorites) {
                     navController.navigate("movieDetail/${movies.results[index].id}")
                 }
             }
@@ -111,9 +114,12 @@ fun HomeScreen(
 
 @Composable
 fun MovieItem(
+    viewModel: MovieViewModel,
     movie: MovieEntity, onAddToFavorites: (MovieEntity) -> Unit,
     onClick: () -> Unit
 ) {
+    movie.isFav = viewModel.isMovieInFavorites(movie.id).collectAsState(initial = false).value
+    var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,16 +147,27 @@ fun MovieItem(
             // Heart Icon Button
             IconButton(
                 onClick = {
-                    onAddToFavorites(movie)
+                    if (movie.isFav) {
+                        showDialog = true
+                    } else {
+                        onAddToFavorites(movie)
+
+                    }
                 },
                 modifier = Modifier
             ) {
-
+                if (movie.isFav) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
                         contentDescription = "Add to Favorites",
                         tint = MaterialTheme.colorScheme.error
                     )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Add to Favorites",
+                    )
+                }
 
             }
         }
@@ -164,5 +181,15 @@ fun MovieItem(
                 .height(250.dp)
                 .padding(bottom = 8.dp)
         )
+        if (showDialog) {
+            DeleteAlertDialog(titleText = "Are You Sure You Want to Remove ${movie.title} From Favorites?",
+                onYes = {
+                    viewModel.removeFromFavorites(movie)
+                    showDialog = false
+                },
+                onNo = {
+                    showDialog = false
+                })
+        }
     }
 }

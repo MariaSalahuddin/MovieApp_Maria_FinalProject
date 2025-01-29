@@ -18,6 +18,7 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
         composable("home") {
             val context = LocalContext.current
             HomeScreen(
+                viewModel = viewModel,
                 navController = navController,
                 movies = viewModel.movies,
                 onAddToFavorites = { movie ->
