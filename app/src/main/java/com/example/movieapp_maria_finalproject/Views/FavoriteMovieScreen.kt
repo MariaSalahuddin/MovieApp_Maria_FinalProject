@@ -192,6 +192,7 @@ fun FavoriteMovieItem(
                     color = Color.White
                 )
             }
+            //delete confirmation dialogue
             if (showDialog) {
                 DeleteAlertDialog(
                     titleText = "Are You Sure You Want to Delete ${movie.title}?",

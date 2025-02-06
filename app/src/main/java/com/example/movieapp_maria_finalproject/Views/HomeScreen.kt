@@ -182,6 +182,7 @@ fun MovieItem(
                 .height(250.dp)
                 .padding(bottom = 8.dp)
         )
+        //delete confirmation dialogue
         if (showDialog) {
             DeleteAlertDialog(titleText = "Are You Sure You Want to Remove ${movie.title} From Favorites?",
                 onYes = {

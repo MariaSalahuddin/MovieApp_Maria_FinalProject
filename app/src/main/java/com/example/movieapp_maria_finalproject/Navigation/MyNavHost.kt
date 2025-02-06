@@ -15,6 +15,7 @@ import com.example.movieapp_maria_finalproject.Views.MovieDetailScreen
 @Composable
 fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewModel) {
     NavHost(navController = navController, startDestination = "home") {
+        //home screen navigation
         composable("home") {
             val context = LocalContext.current
             HomeScreen(
@@ -33,6 +34,7 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
                 onScreenLoading = { viewModel.getPopularMovies() }
             )
         }
+        //movie detail screen navigation
         composable("movieDetail/{movieId}") { backStackEntry ->
             val movieId = backStackEntry.arguments?.getString("movieId")?.toIntOrNull()
             val movie = viewModel.movies.results.find { it.id == movieId }
@@ -53,6 +55,7 @@ fun MyNavigationGraph(navController: NavHostController, viewModel: MovieViewMode
                 )
             }
         }
+        //favorites screen navigation
         composable("favorites") {
             FavoriteMoviesScreen(
                 navController = navController,
